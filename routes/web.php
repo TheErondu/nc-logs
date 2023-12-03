@@ -16,9 +16,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Auth::routes();
-Route::get('/', function () {
-    return view('welcome');
-});
 Route::middleware(['auth'])->group(function () {
     Route::get('/',[LogsController::class, 'index'])->name('default');
     Route::resource('issues', IssueController::class);

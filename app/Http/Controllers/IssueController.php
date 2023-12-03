@@ -34,8 +34,8 @@ class IssueController extends Controller
 
     public function create()
     {
-        $departments = Store::all();
-        return view('issues.create', compact('departments'));
+        $stores = Store::all();
+        return view('issues.create', compact('stores'));
     }
 
     /**
@@ -101,9 +101,9 @@ class IssueController extends Controller
         $issue_status   = array(
             'OPEN', 'CLOSED'
         );
-        $departments = Store::all();
+        $stores = Store::all();
         $users = User::all();
-        return view('dashboard.issues.edit', compact('issue','engineers', 'users', 'departments', 'issue_status'));
+        return view('dashboard.issues.edit', compact('issue','engineers', 'users', 'stores', 'issue_status'));
     }
 
      /**

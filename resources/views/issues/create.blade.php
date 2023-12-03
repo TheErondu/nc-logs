@@ -52,11 +52,11 @@
                                     value="" required placeholder="">
                                 </div>
                                 <div class="mb-3 col-md-4">
-                                    <label for="department">Department</label>
+                                    <label for="department">Store</label>
                                     <select class="form-control select2" name="department" id="department" data-placeholder=" Select Department">
                                         <option value="" selected>select</option>
-                                        @foreach($departments as $department)
-                                            <option value="{{ $department->name }}">{{ $department->name }}</option>
+                                        @foreach($stores as $store)
+                                            <option value="{{ $store->name }}">{{ $department->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

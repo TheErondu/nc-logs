@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('store_manager');
+            $table->string('location');
             $table->timestamps();
         });
     }
