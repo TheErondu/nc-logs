@@ -36,6 +36,6 @@ implements ShouldQueue
         return $this->from($from)
         ->subject('Ticket  Updated')
         ->cc($this->issue['copy'])
-        ->markdown('mail.TicketUpdatedMail');
+        ->markdown('mail.TicketEscalatedMail');
     }
 }

@@ -43,7 +43,6 @@
                                 <input name="equipment_name" type="text"value="{{$issue->equipment_name}}" hidden>
                                 <input name="fault_description" type="text"value="{{$issue->fault_description}}" hidden>
                                 <input name="date" type="text"value="{{$issue->date}}" hidden>
-                                <input name="raised_by" type="text"value="{{$issue->raised_by}}" hidden>
                                 <input name="store_id" type="text"value="{{$issue->store_id}}" hidden>
                                 <div class="mb-3 col-md-4">
                                     <label for="item_name">Equipment / Issue</label>

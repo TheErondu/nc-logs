@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use Illuminate\Console\Command;
 use App\Models\Issue;
 use Carbon\Carbon;
@@ -11,7 +12,7 @@ use App\Mail\TicketEscalation;
 class EscalateTickets extends Command
 {
     protected $signature = 'tickets:escalate';
-    protected $description = 'Escalate open issues older than 1 hour and notify Head Operations after 24 hours';
+    protected $description = 'Escalate open issues older than 1 hour to CTO and notify Head Operations after 24 hours';
 
     public function handle()
     {
@@ -25,12 +26,12 @@ class EscalateTickets extends Command
 
         foreach ($issuesToAssignee as $issue) {
             // Perform the escalation action for the assigned user
-            $this->escalateToAssignee($issue);
+            $this->escalateToCTO($issue);
         }
 
         foreach ($issuesToAdmin as $issue) {
             // Perform the escalation action for the system admin
-            $this->escalateToAdmin($issue);
+            $this->escalateToOperations($issue);
         }
 
         $this->info('Ticket escalation completed.');
@@ -41,8 +42,8 @@ class EscalateTickets extends Command
         // Perform the escalation action for the assigned user
         $issue->update(['status' => 'escalated']);
 
-        // Send an email to the assigned user
-        Mail::to($issue->assigned_user_email)->send(new TicketEscalation($issue));
+        $cto = User::role('CTO')->get()->pluck('email');
+        Mail::to($cto)->send(new TicketEscalation($issue));
     }
 
     protected function escalateToOperations($issue)
@@ -51,6 +52,7 @@ class EscalateTickets extends Command
         // For example, you can log the escalation or perform a specific action
 
         // Send an email to the system admin (replace 'admin@example.com' with the actual admin email)
-        Mail::to('admin@example.com')->send(new TicketEscalation($issue));
+        $operationsTeam = User::permission('recieve top level escalation')->get()->pluck('email');
+        Mail::to($operationsTeam)->send(new TicketEscalation($issue));
     }
 }

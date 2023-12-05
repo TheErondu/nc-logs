@@ -10,6 +10,10 @@ class Issue extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'status'
+    ];
+
     public function user()
     {
         return $this->belongsTo('App\Models\User','user_id' );

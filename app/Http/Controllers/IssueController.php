@@ -63,9 +63,9 @@ class IssueController extends Controller
         $issue->engineers_comment = $request->input('engineers_comment');
         $issue->resolved_date = $request->input('resolved_date');
         $issue->save();
-        $copy = User::role('Admin')->get()->pluck('email');
+        $copy = User::role('Engineer')->get()->pluck('email');
         $email = Auth::user()->email;
-        $url = route('home');
+        $url = route('default');
         $link = $url . '/' . 'issues' . '/' . $issue->id . '/edit';
         $details = [
             'link' => $link,
@@ -126,7 +126,7 @@ class IssueController extends Controller
         $supervisor->email,
         ]
         );
-        $url = route('home');
+        $url = route('default');
         $link = $url . '/' . 'issues' . '/' . $issue->id . '/edit';
         $details = [
             'link' => $link,
@@ -155,11 +155,12 @@ class IssueController extends Controller
         $issue->equipment_name = $request->input('equipment_name');
         $issue->fault_description = $request->input('fault_description');
         $issue->date = $request->input('date');
-        $issue->raised_by = $request->input('raised_by');
         $issue->store_id = $request->input('store_id');
         if ($user->can('fix-issues')) {
             $issue->status = $request->input('status');
-            $issue->fixed_by = $request->input('raised_by');
+            if($issue->status == "CLOSED"){
+                $issue->fixed_by = $user->name;
+            }
             $issue->action_taken = $request->input('action_taken');
             $issue->cause_of_breakdown = $request->input('cause_of_breakdown');
             $issue->engineers_comment = $request->input('engineers_comment');
@@ -167,9 +168,9 @@ class IssueController extends Controller
             $issue->status = $request->input('status');
         }
         $issue->save();
-        $email = User::where('username', 'Like', "$issue->raised_by")->pluck('email')->implode('');
-        $copy = Store::where('name', 'Engineers')->pluck('mail_group')->implode('');
-        $url = route('home');
+        $email = $issue->user->email;
+        $copy = User::role('Engineer')->get()->pluck('email');
+        $url = route('default');
         $link = $url . '/' . 'issues' . '/' . $issue->id . '/edit';
 
         // dd($link);
