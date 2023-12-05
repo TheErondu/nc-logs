@@ -5,24 +5,24 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Queue\SerializesModels;
 
-class TicketCreated extends Mailable
+class TicketEscalation extends Mailable
 implements ShouldQueue
 {
     use Queueable, SerializesModels;
-    public $details;
+    public $issue;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($details)
+    public function __construct($issue)
     {
-        $this->details = $details;
+        $this->issue = $issue;
     }
+
 
     /**
      * Build the message.
@@ -30,11 +30,12 @@ implements ShouldQueue
      * @return $this
      */
     public function build()
+
     {
         $from = env('MAIL_FROM_ADDRESS');
         return $this->from($from)
-        ->subject('New Issue Reported!')
-        ->cc($this->details['copy'])
-        ->markdown('mail.TicketCreatedMail');
+        ->subject('Ticket  Updated')
+        ->cc($this->issue['copy'])
+        ->markdown('mail.TicketUpdatedMail');
     }
 }

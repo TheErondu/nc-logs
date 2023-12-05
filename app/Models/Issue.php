@@ -14,4 +14,12 @@ class Issue extends Model
     {
         return $this->belongsTo('App\Models\User','user_id' );
     }
+    public function assigned_enginner()
+    {
+        return $this->belongsTo('App\Models\User','user_id' );
+    }
+    public function store()
+    {
+        return $this->belongsTo('App\Models\Store','store_id' );
+    }
 }

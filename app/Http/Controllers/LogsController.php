@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\LogEditedEvent;
 use App\Events\LogSubmittedEvent;
-use App\Logs;
+use App\Models\Logs;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

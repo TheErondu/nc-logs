@@ -8,45 +8,11 @@
                         <h5 class="card-title" style="color: white;">Report Tech Problem</h5>
 
                     </div>
-                    <div class="row">
-                        @if (Session::has('message'))
-                            <div class="container">
-                                <div class="alert alert-success alert-dismissible" role="alert">
-                                    <div class="alert-icon">
-                                        <i class="far fa-fw fa-bell"></i>
-                                    </div>
-                                    <div class="alert-message">
-                                        <strong> {{ session('message') }}</strong>
-                                    </div>
-
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="container">
-                                <div class="alert alert-danger alert-dismissible" role="alert">
-                                    @foreach ($errors->all() as $error)
-                                        <div class="alert-icon">
-                                            <i class="far fa-fw fa-bell"></i>
-                                        </div>
-                                        <div class="alert-message">
-                                            <strong> {{ $error }}</strong>
-                                        </div>
-
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
-                    </div>
                     <div class="card-body">
                         <form action="{{ route('issues.assign', $issue->id) }}" id="assigned_engineer_form" method="POST">
                             @method('PUT')
                             @csrf
-                            @can('is-manager')
+                            @can('assign engineer')
                             <div class="row justify-content-center">
                                 <div class="mb-3 col-md-6">
                                         <div>
@@ -54,7 +20,7 @@
                                     <select class="form-control select2" name="assigned_engineer" id="assigned_engineer" data-placeholder=" Choose Engineer...">
                                         <option value="" selected>select</option>
                                         @foreach($engineers as $engineer)
-                                            <option value="{{ $engineer->name }}" @if($issue->assigned_engineer === $engineer->name) selected='selected' @endif>{{$engineer->name}}</option>
+                                            <option value="{{ $engineer->id }}" @if($issue->assigned_engineer === $engineer->id) selected='selected' @endif>{{$engineer->name}}</option>
                                         @endforeach
                                     </select>
                                         </div>
@@ -74,21 +40,19 @@
                             {{-- Engineers only --}}
                             @can('fix-issues')
                             <div class="row justify-content-between">
-                                <input name="item_name" type="text"value="{{$issue->item_name}}" hidden>
-                                <input name="description" type="text"value="{{$issue->description}}" hidden>
+                                <input name="equipment_name" type="text"value="{{$issue->equipment_name}}" hidden>
+                                <input name="fault_description" type="text"value="{{$issue->fault_description}}" hidden>
                                 <input name="date" type="text"value="{{$issue->date}}" hidden>
-                                <input name="location" type="text"value="{{$issue->location}}" hidden>
                                 <input name="raised_by" type="text"value="{{$issue->raised_by}}" hidden>
-                                <input name="department" type="text"value="{{$issue->department}}" hidden>
+                                <input name="store_id" type="text"value="{{$issue->store_id}}" hidden>
                                 <div class="mb-3 col-md-4">
                                     <label for="item_name">Equipment / Issue</label>
-                                    <h2>{{$issue->item_name}}</h2>
-                                    <p> (Department: {{$issue->department}})</p>
-                                    <p> (Location: {{$issue->location}})</p>
+                                    <h4>{{$issue->equipment_name}}</h4>
+                                    <p> (Store: {{$issue->store->location}})</p>
                                 </div>
                                 <div class="mb-3 col-md-4">
                                     <label for="description">Fault Description</label>
-                                    <h2>{{$issue->description}}</h2>
+                                    <p>{{$issue->fault_description}}</p>
                                 </div>
                                 <div class="mb-3 col-md-4">
                                     <label for="fixed_by">Who Fixed it?</label>
@@ -132,30 +96,25 @@
                             {{-- Normal Users --}}
                             <div class="row justify-content-between">
                                 <div class="mb-3 col-md-4">
-                                    <label for="item_name">Equipment</label>
-                                    <input name="item_name" type="text" class="form-control" id="item_name"
-                                    value="{{$issue->item_name}}" required placeholder="">
+                                    <label for="equipment_name">Equipment</label>
+                                    <input name="item_name" type="text" class="form-control" id="equipment_name"
+                                    value="{{$issue->equipment_name}}" required placeholder="">
                                 </div>
                                 <div class="mb-3 col-md-4">
-                                    <label for="department">Department</label>
+                                    <label for="department">Store</label>
                                     <select class="form-control select2" name="department_id" id="department_id" data-placeholder=" Select Department">
                                         <option value="" selected>select</option>
-                                        @foreach($departments as $department)
-                                            <option value="{{ $department->name}}" @if($issue->department === $department->name) selected='selected' @endif>{{ $department->name }}</option>
+                                        @foreach($stores as $store)
+                                            <option value="{{ $store->name}}" @if($issue->store->name === $store->name) selected='selected' @endif>{{ $store->name }}</option>
                                         @endforeach
                                     </select>
-                                </div>
-                                <div class="mb-3 col-md-4">
-                                    <label for="location">Location</label>
-                                    <input name="location" type="text" class="form-control" id="location"
-                                    value="{{ $issue->location}}" required placeholder="">
                                 </div>
                             </div>
                             <div class="row justify-content-left">
                                 <div class="mb-3 col-md-12">
-                                    <label for="description">Fault Description</label>
-                                    <textarea name="description" type="text" class="form-control" id="description"
-                                    value="" required placeholder="">{{$issue->description}}</textarea>
+                                    <label for="fault_description">Fault Description</label>
+                                    <textarea name="fault_description" type="text" class="form-control" id="fault_description"
+                                    value="" required placeholder="">{{$issue->fault_description}}</textarea>
                                 </div>
                             </div>
                             @endcan

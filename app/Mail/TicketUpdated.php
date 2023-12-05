@@ -34,10 +34,9 @@ implements ShouldQueue
 
     {
         $from = env('MAIL_FROM_ADDRESS');
-        $engineer_mails = \App\Models\User::where('department_id', '11')->pluck('email');
         return $this->from($from)
-        ->subject('Issue  Notification Email')
-        ->cc($engineer_mails)
+        ->subject('Ticket  Updated')
+        ->cc($this->details['copy'])
         ->markdown('mail.TicketUpdatedMail');
     }
 }

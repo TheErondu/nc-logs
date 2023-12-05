@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Store extends Model
+class Employee extends Model
 {
     use HasFactory;
 
-    public function manager()
+
+    protected $table = 'users';
+
+
+    public function store()
     {
-        return $this->hasOne('App\Models\User');
+        return $this->belongsTo('App\Models\Store', 'store_id');
     }
 }

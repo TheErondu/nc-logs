@@ -8,74 +8,35 @@
                         <h5 class="card-title" style="color: white;">Report Tech Problem</h5>
 
                     </div>
-                    <div class="row">
-                        @if (Session::has('message'))
-                            <div class="container">
-                                <div class="alert alert-success alert-dismissible" role="alert">
-                                    <div class="alert-icon">
-                                        <i class="far fa-fw fa-bell"></i>
-                                    </div>
-                                    <div class="alert-message">
-                                        <strong> {{ session('message') }}</strong>
-                                    </div>
-
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="container">
-                                <div class="alert alert-danger alert-dismissible" role="alert">
-                                    @foreach ($errors->all() as $error)
-                                        <div class="alert-icon">
-                                            <i class="far fa-fw fa-bell"></i>
-                                        </div>
-                                        <div class="alert-message">
-                                            <strong> {{ $error }}</strong>
-                                        </div>
-
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
-                    </div>
                     <div class="card-body">
                         <form method="POST" enctype="multipart/form-data" action="{{ route('issues.store') }}">
                             @csrf
-                            <div class="row justify-content-between">
-                                <div class="mb-3 col-md-4">
-                                    <label for="item_name">Equipment</label>
-                                    <input name="item_name" type="text" class="form-control" id="item_name"
-                                    value="" required placeholder="">
-                                </div>
+                            <div class="row justify-content-center">
                                 <div class="mb-3 col-md-4">
                                     <label for="department">Store</label>
-                                    <select class="form-control select2" name="department" id="department" data-placeholder=" Select Department">
+                                    <select class="form-control select2" name="store_id" id="store_id" data-placeholder=" Select Store location">
                                         <option value="" selected>select</option>
                                         @foreach($stores as $store)
-                                            <option value="{{ $store->name }}">{{ $department->name }}</option>
+                                            <option value="{{ $store->id }}">{{ $store->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="mb-3 col-md-4">
-                                    <label for="location">Location</label>
-                                    <input name="location" type="text" class="form-control" id="location"
-                                    value="{{old('location')}}" required placeholder="">
+                                    <label for="equipment_name">Equipment</label>
+                                    <input name="equipment_name" type="text" class="form-control" id="equipment_name"
+                                    value="" required placeholder="">
                                 </div>
                             </div>
-                            <div class="row justify-content-left">
-                                <div class="mb-3 col-md-12">
-                                    <label for="description">Fault Description</label>
-                                    <textarea name="description" type="text" class="form-control" id="description"
-                                    value="" required placeholder="">{{ old('description') }}</textarea>
+                            <div class="row justify-content-center">
+                                <div class="mb-3 col-md-8">
+                                    <label for="fault_description">Fault Description</label>
+                                    <textarea name="fault_description" type="text" class="form-control" id="fault_description"
+                                    value="" required placeholder="">{{ old('fault_description') }}</textarea>
                                 </div>
                             </div>
 
 
-                            <div class="row justify-content-between">
+                            <div class="row justify-content-around">
                                     <div class="mb-3 col-md-6">
                                         <a href="{{ route('issues.index') }}"
                                             style="background-color: rgb(53, 54, 55) !important;"
@@ -108,22 +69,6 @@
                         dropdownParent: $(this).parent()
                     });
             })
-            // Datetimepicker
-            $('#datetimepicker-minimum').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss'
-            });
-            $('#datetimepicker-minimum2').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss'
-            });
-            $('#datetimepicker-view-mode').datetimepicker({
-                viewMode: 'years'
-            });
-            $('#datetimepicker-time').datetimepicker({
-                format: 'LT'
-            });
-            $('#datetimepicker-date').datetimepicker({
-                format: 'YYYY-MM-DD HH:mm:ss'
-            });
         });
     </script>
 

@@ -10,40 +10,6 @@
                             type="submit" class="btn btn-primary create-button">Add New Employee <i
                                 class="fas fa-plus"></i></a> --}}
                     </div>
-                    <div class="row">
-                        @if (Session::has('message'))
-                            <div class="container">
-                                <div class="alert alert-success alert-dismissible" role="alert">
-                                    <div class="alert-icon">
-                                        <i class="far fa-fw fa-bell"></i>
-                                    </div>
-                                    <div class="alert-message">
-                                        <strong> {{ session('message') }}</strong>
-                                    </div>
-
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="container">
-                                <div class="alert alert-danger alert-dismissible" role="alert">
-                                    @foreach ($errors->all() as $error)
-                                        <div class="alert-icon">
-                                            <i class="far fa-fw fa-bell"></i>
-                                        </div>
-                                        <div class="alert-message">
-                                            <strong> {{ $error }}</strong>
-                                        </div>
-
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
-                    </div>
                     @if (count($issues) > 0)
 
                             <div style="overflow-y: auto; height:400px; ">
@@ -52,11 +18,10 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th width=40%>Description</th>
+                                    <th width=30%>Description</th>
                                     <th>Date</th>
-                                    <th>Location</th>
                                     <th>Raised By</th>
-                                    <th>Department</th>
+                                    <th>Store</th>
                                     <th>Status</th>
                                     <th>Fixed by</th>
                                     <th>Action Taken</th>
@@ -68,14 +33,12 @@
                             <tbody>
                                 @foreach ($issues as $issue)
                                     <tr>
-                                        <td><a href="{{ route('issues.edit', $issue->id) }}"><i
-                                                    class="far fa-edit"></i></a></td>
-                                        <td>{{ $issue->item_name }}</td>
-                                        <td>{{ $issue->description }}</td>
+                                        <td><a href="{{ route('issues.edit', $issue->id) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+                                        <td>{{ $issue->equipment_name }}</td>
+                                        <td>{{ $issue->fault_description }}</td>
                                         <td>{{ $issue->date }}</td>
-                                        <td>{{ $issue->location }}</td>
-                                        <td>{{ $issue->raised_by }}</td>
-                                        <td>{{ $issue->department }}</td>
+                                        <td>{{ $issue->user->name }}</td>
+                                        <td>{{ $issue->store->name }}</td>
                                         <td>{{ $issue->status }}</td>
                                         <td>{{ $issue->fixed_by }}</td>
                                         <td>{{ $issue->action_taken }}</td>
@@ -108,8 +71,8 @@
                     <div class="card">
                         <div class="card-body card-black">
                             <p>You Have not Raised any issues yet!, Click <a href="{{ route('issues.create') }}"
-                                    data-toggle="tooltip" title="" data-original-title="Add Vehicles">Here</a> to Raise
-                                a Issue
+                                    data-toggle="tooltip" title="" data-original-title="Add Issues">Here</a> to Raise
+                                an Issue
                             <p>
                             <p><a class="btn btn-primary" href="{{ route('issues.create') }}">Report Tech Problem</a>
                             </p>
