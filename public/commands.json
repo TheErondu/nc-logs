@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "description": "Run schedule",
+        "command": "schedule:run"
+    },
+    {
+        "id": 2,
+        "description": "Run Queued Jobs",
+        "command": "queue:work"
+    },
+    {
+        "id": 2,
+        "description": "Retry Queued Jobs",
+        "command": "queue:retry all"
+    }
+]

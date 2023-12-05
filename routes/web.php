@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArtisanController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\LogsController;
@@ -34,7 +35,6 @@ Route::middleware(['auth'])->group(function () {
         'prefix' => 'admin',
        // 'middleware' => ['role:admin'],
     ], function () {
-
         Route::resource('stores', StoreController::class);
         Route::resource('roles', RoleController::class);
         Route::resource('employees', EmployeeController::class);

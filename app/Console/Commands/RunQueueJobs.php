@@ -12,15 +12,7 @@ class RunQueueJobs extends Command
 
     public function handle()
     {
-        // Specify the queue connection and name if needed
-        $queueConnection = 'database';
-        $queueName = 'default';
-
-        // Log output and errors
-        $outputFile = 'storage/logs/queue.log';
-        $errorFile = 'storage/logs/queue-error.log';
-
         // Run the queue worker in daemon mode
-        Artisan::call("queue:work --daemon --queue={$queueName} --connection={$queueConnection} > {$outputFile} 2> {$errorFile}");
+        Artisan::call("queue:work");
     }
 }
