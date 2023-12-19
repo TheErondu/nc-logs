@@ -17,11 +17,13 @@ class EscalateTickets extends Command
     public function handle()
     {
         $issuesToAssignee = Issue::where('status', 'open')
-            ->where('created_at', '<', Carbon::now()->subMinutes(5))
+            ->orWhere('status', 'escalated')
+            ->where('created_at', '<', Carbon::now()->subMinutes(2))
             ->get();
 
         $issuesToAdmin = Issue::where('status', 'open')
-            ->where('created_at', '<', Carbon::now()->subMinutes(10))
+            ->orWhere('status', 'escalated')
+            ->where('created_at', '<', Carbon::now()->subMinutes(5))
             ->get();
 
         foreach ($issuesToAssignee as $issue) {

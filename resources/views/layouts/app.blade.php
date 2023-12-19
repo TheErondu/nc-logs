@@ -44,7 +44,7 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
+                    <i aria-hidden="true" class="fa fa-bars" style="color: #001ddb;"></i>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -78,7 +78,7 @@
                             @endif
                         @else
                         <li class="nav-item">
-                            <a class="nav-link btn-primary" style="background-color: red; border-radius:10px" href="{{ route('issues.create') }}">{{ __('Report a Problem') }}</a>
+                            <a class="nav-link btn-primary" style="background-color: red; border-radius:10px;padding-left:10px;" href="{{ route('issues.create') }}">{{ __('Report a Problem') }}</a>
                         </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"

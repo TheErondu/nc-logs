@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\IssueStatus;
 use App\Events\EngineerAssignedEvent;
 use App\Models\Issue;
+use App\Services\IssueService;
 use Illuminate\Http\Request;
 use App\Events\TicketCreatedEvent;
 use App\Events\TicketUpdatedEvent;
@@ -11,24 +13,43 @@ use App\Models\Store;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+
 
 class IssueController extends Controller
 {
+    private $issueService;
 
+    public function __construct(IssueService $issueService)
+    {
+        $this->issueService = $issueService;
+    }
     public function index()
     {
         $user = Auth::user();
-        $raised_issues = Issue::where('id', Auth::user()->id)->orderBy('id', 'desc')->get();
-        if (request()->query('type') === 'raised') {
+        $raised_issues = $this->issueService->getRaisedIssues($user->id);
 
+        if (request()->query('type') === 'raised') {
             $issues = $raised_issues;
-        } elseif (($user->can('fix-issues'))) {
-            $issues = Issue::where('id', '>', 0 )->orderBy('id', 'DESC')->get();
-        } else
+        } elseif ($user->can('fix-issues')) {
+            $issues = $this->issueService->getAllIssues();
+        } else {
             $issues = $raised_issues;
+        }
+
+        $waitingCount = $this->issueService->getCountByStatus(IssueStatus::WAITING);
+        $openCount = $this->issueService->getCountByStatus(IssueStatus::OPEN);
+        $closedCount = $this->issueService->getCountByStatus(IssueStatus::CLOSED);
+        $contestedCount = $this->issueService->getCountByStatus(IssueStatus::CONTESTED);
+
         $users = User::all();
-        return view('issues.index', compact('issues', 'raised_issues', 'users'));
+
+        $stores = Store::all();
+
+        $engineers = User::role('Engineer')->get();
+
+        $issueStatuses = IssueStatus::cases();
+
+        return view('issues.index', compact('issues', 'issueStatuses', 'raised_issues', 'users','stores', 'engineers','waitingCount', 'openCount', 'closedCount', 'contestedCount'));
     }
 
 
@@ -56,7 +77,7 @@ class IssueController extends Controller
         $issue->date = \Carbon\Carbon::now();
         $issue->user_id = Auth::user()->id;
         $issue->store_id = $request->input('store_id');
-        $issue->status = 'OPEN';
+        $issue->status = 'WAITING';
         $issue->fixed_by = $request->input('fixed_by');
         $issue->action_taken = $request->input('action_taken');
         $issue->cause_of_breakdown = $request->input('cause_of_breakdown');
@@ -69,7 +90,7 @@ class IssueController extends Controller
         $link = $url . '/' . 'issues' . '/' . $issue->id . '/edit';
         $details = [
             'link' => $link,
-            'location' =>  $issue->store->name .', address: '.$issue->store->location,
+            'location' => $issue->store->name . ', address: ' . $issue->store->location,
             'email' => $email,
             'raised_by' => $issue->user->name,
             'fault_description' => $issue->fault_description,
@@ -97,10 +118,7 @@ class IssueController extends Controller
         $issue = Issue::all()->find($id);
         $engineers = User::role('Engineer')->get();
 
-        $issue_status = array(
-            'OPEN',
-            'CLOSED'
-        );
+        $issue_status = IssueStatus::cases();
         $stores = Store::all();
         $users = User::all();
         return view('issues.edit', compact('issue', 'engineers', 'users', 'stores', 'issue_status'));
@@ -122,8 +140,8 @@ class IssueController extends Controller
         $email = User::where('id', $issue->user->id)->pluck('email');
         $supervisor = Auth::user();
         $copy = collect([
-        $assigned_engineer->email,
-        $supervisor->email,
+            $assigned_engineer->email,
+            $supervisor->email,
         ]
         );
         $url = route('default');
@@ -131,7 +149,7 @@ class IssueController extends Controller
         $details = [
             'link' => $link,
             'supervisor' => $supervisor->name,
-            'location' =>  $issue->store->name .', address: '.$issue->store->location,
+            'location' => $issue->store->name . ', address: ' . $issue->store->location,
             'status' => $issue->status,
             'assigned_engineer' => $assigned_engineer->name,
             'fault_description' => $issue->fault_description,
@@ -158,7 +176,7 @@ class IssueController extends Controller
         $issue->store_id = $request->input('store_id');
         if ($user->can('fix-issues')) {
             $issue->status = $request->input('status');
-            if($issue->status == "CLOSED"){
+            if ($issue->status == "CLOSED") {
                 $issue->fixed_by = $user->name;
             }
             $issue->action_taken = $request->input('action_taken');
